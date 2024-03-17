@@ -56,7 +56,7 @@ This standard naming convention helps maintain consistency across your project a
 Contributions to Accessibility Identifier Updater are welcome. Please follow the standard code practices and submit a pull request for review.
 
 ## License
-[Choose an appropriate license for your project, e.g., MIT, GPL, Apache, etc., and provide a link to the license text.]
+GPLv2
 
 ## Contact
 For queries or feedback, please contact Munib Siddiqui at munibsiddiqui@gmail.com.
