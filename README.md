@@ -65,4 +65,7 @@ For queries or feedback, please contact Munib Siddiqui at munibsiddiqui@gmail.co
 This project is a fork and extension of [Gini-Apps's Xcode-Auto-Accessibility-Identifier-Generator-iOS](https://github.com/Gini-Apps/Xcode-Auto-Accessibility-Identifier-Generator-iOS). Credit goes to the original authors for their foundational work on which this tool is built.
 
 ---
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/munibsiddiqui)
+
+---
 
