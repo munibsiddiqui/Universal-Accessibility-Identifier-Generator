@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": "/Users/muneebsiddique/Work/SourceCode/Windows_Source_Code/purevpn-windows-app-2.0/src/PureVPN.App/Views/test --exclude Pods Submodule"
+            "args": "$PATH_TO_PROJECT_DIRECTORY --exclude Pods Submodule"
         }
     ]
 }
