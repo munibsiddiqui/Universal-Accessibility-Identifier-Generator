@@ -78,6 +78,13 @@ def add_automation_id_to_wpf_lxml(xml_path):
     tree = etree.parse(xml_path)
     root = tree.getroot()
 
+    # Extract x:Class attribute value
+    x_class_attr = '{http://schemas.microsoft.com/winfx/2006/xaml}Class'
+    x_class_value = ""
+    if x_class_attr in root.attrib:
+        x_class_value = root.attrib[x_class_attr].split('.')[-1]  # Optional: Extract the last part if it's a namespace
+
+
     # Initialize a counter for unique ID generation
     unique_id_counter = 1
 
@@ -90,10 +97,10 @@ def add_automation_id_to_wpf_lxml(xml_path):
             if name_attr in elem.attrib:
                 # Element has x:Name, use it for AutomationProperties.AutomationId
                 name = elem.attrib[name_attr]
-                elem.set(automation_id_attr, name)
+                elem.set(automation_id_attr, f"{x_class_value}_{name}")
             else:
                 # Element doesn't have x:Name, generate a unique AutomationProperties.AutomationId
-                unique_automation_id = f"{elem_tag_name}_{unique_id_counter}"
+                unique_automation_id = f"{x_class_value}_{elem_tag_name}_{unique_id_counter}"
                 elem.set(automation_id_attr, unique_automation_id)
                 unique_id_counter += 1
 
