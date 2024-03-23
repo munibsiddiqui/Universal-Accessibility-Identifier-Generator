@@ -1,7 +1,8 @@
 import os
-import uuid
 import xml.etree.ElementTree as ET
-
+from lxml import etree
+from lxml.etree import QName
+    
 def add_accessibility_identifier(xml_path):
     tree = ET.parse(xml_path)
     root = tree.getroot()
@@ -51,3 +52,61 @@ def add_accessibility_identifier(xml_path):
 
     # Save the modified XML back to the file
     tree.write(xml_path)
+
+
+def add_automation_id_to_wpf_lxml(xml_path):
+    # Define and register namespaces
+    nsmap = {
+        'x': "http://schemas.microsoft.com/winfx/2006/xaml",
+        'd': "http://schemas.microsoft.com/expression/blend/2008",
+        'mc': "http://schemas.openxmlformats.org/markup-compatibility/2006",
+        'Controls': "clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro",
+        'cal': "http://www.caliburnproject.org",
+    }
+
+    # Elements to add AutomationProperties.AutomationId
+    elements_to_add_id = [
+        'Button', 'TextBox', 'ComboBox', 'ListBox', 'RadioButton', 'CheckBox',
+        'MenuItem', 'TabControl', 'ListView', 'TreeView', 'DataGrid', 'Expander',
+        'ScrollViewer', 'Slider', 'ProgressBar', 'GroupBox', 'Label', 'Hyperlink',
+        'Image', 'WebBrowser', 'Calendar', 'DatePicker', 'TimePicker', 'PasswordBox',
+        'RichTextBox', 'DocumentViewer', 'MediaElement', 'UserControl', 'ContentControl',
+        'Border'
+    ]
+
+    # Parse the XML file
+    tree = etree.parse(xml_path)
+    root = tree.getroot()
+
+    # Extract x:Class attribute value
+    x_class_attr = '{http://schemas.microsoft.com/winfx/2006/xaml}Class'
+    x_class_value = ""
+    if x_class_attr in root.attrib:
+        x_class_value = root.attrib[x_class_attr].split('.')[-1]  # Optional: Extract the last part if it's a namespace
+
+
+    # Initialize a counter for unique ID generation
+    unique_id_counter = 1
+
+    for elem in root.iter():
+        elem_tag_name = etree.QName(elem).localname
+        if elem_tag_name in elements_to_add_id:
+            name_attr = QName(nsmap['x'], "Name")
+            automation_id_attr = QName("AutomationProperties.AutomationId")
+
+            if name_attr in elem.attrib:
+                # Element has x:Name, use it for AutomationProperties.AutomationId
+                name = elem.attrib[name_attr]
+                elem.set(automation_id_attr, f"{x_class_value}_{name}")
+            else:
+                # Element doesn't have x:Name, generate a unique AutomationProperties.AutomationId
+                unique_automation_id = f"{x_class_value}_{elem_tag_name}_{unique_id_counter}"
+                elem.set(automation_id_attr, unique_automation_id)
+                unique_id_counter += 1
+
+    # Register the namespaces to ensure they are correctly used in the output
+    for prefix, uri in nsmap.items():
+        etree.register_namespace(prefix, uri)
+
+    # Save the modified XML back to the file
+    tree.write(xml_path, pretty_print=True, xml_declaration=True, encoding="UTF-8", standalone=None)
